@@ -3,6 +3,7 @@ from django import forms
 from django.conf import settings
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
+from address import get_google_api_key
 
 from .models import Address
 
@@ -12,6 +13,7 @@ JQUERY_URL = getattr(
     "JQUERY_URL",
     "https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js",
 )
+GOOGLE_API_KEY = get_google_api_key()
 
 
 class AddressWidget(forms.TextInput):
@@ -35,7 +37,7 @@ class AddressWidget(forms.TextInput):
         """Media defined as a dynamic property instead of an inner class."""
 
         js = [
-            "https://maps.googleapis.com/maps/api/js?libraries=places&key=%s" % settings.GOOGLE_API_KEY,
+            "https://maps.googleapis.com/maps/api/js?libraries=places&key=%s" % GOOGLE_API_KEY,
             "js/jquery.geocomplete.min.js",
             "address/js/address.js",
         ]

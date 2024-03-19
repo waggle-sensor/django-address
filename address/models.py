@@ -2,6 +2,7 @@ import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from address import get_google_api_key
 
 try:
     from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor
@@ -323,6 +324,10 @@ class AddressField(models.ForeignKey):
     def formfield(self, **kwargs):
         from .forms import AddressField as AddressFormField
 
-        defaults = dict(form_class=AddressFormField)
-        defaults.update(kwargs)
-        return super(AddressField, self).formfield(**defaults)
+        #if no google api use django's default widget
+        if get_google_api_key():
+            defaults = dict(form_class=AddressFormField)
+            defaults.update(kwargs)
+            return super(AddressField, self).formfield(**defaults)
+        else:
+            return super(AddressField, self).formfield()
